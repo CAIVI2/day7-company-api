@@ -71,4 +71,21 @@ public class CompanyControllerTest {
                 .andExpect(jsonPath("$.id").value(expect.id()))
                 .andExpect(jsonPath("$.name").value(expect.name()));
     }
+
+    @Test
+    void should_return_page_companies_when_list_page() throws Exception {
+        companyController.create(new Company(null, "c1"));
+        companyController.create(new Company(null, "c2"));
+        companyController.create(new Company(null, "c3"));
+        companyController.create(new Company(null, "c4"));
+        companyController.create(new Company(null, "c5"));
+        companyController.create(new Company(null, "c6"));
+
+        MockHttpServletRequestBuilder request = get("/companies?page=1&size=5")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5));
+    }
 }

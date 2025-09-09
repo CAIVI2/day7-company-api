@@ -26,8 +26,17 @@ public class CompanyController {
     }
 
     @GetMapping
-    public List<Company> index() {
-        return companies;
+    public List<Company> index(@RequestParam(required = false, value = "page") Integer page,
+                               @RequestParam(required = false, value = "size") Integer size) {
+        if (page == null || size == null) {
+            return companies;
+        }
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, companies.size());
+        if (fromIndex >= companies.size() || fromIndex < 0) {
+            return new ArrayList<>();
+        }
+        return companies.subList(fromIndex, toIndex);
     }
 
     @GetMapping("/{id}")
