@@ -94,4 +94,27 @@ public class EmployeeControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2));
     }
+
+    @Test
+    void should_return_employee_when_update_employee() throws Exception {
+        Employee employee = employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        String requestBody = """
+                {
+                    "age": 22,
+                    "salary": 6000.0
+                }
+                """;
+
+        MockHttpServletRequestBuilder request = put("/employees/" + employee.id())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(employee.id()))
+                .andExpect(jsonPath("$.name").value(employee.name()))
+                .andExpect(jsonPath("$.age").value(22))
+                .andExpect(jsonPath("$.gender").value(employee.gender()))
+                .andExpect(jsonPath("$.salary").value(6000.0));
+    }
 }

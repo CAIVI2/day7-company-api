@@ -43,4 +43,25 @@ public class EmployeeController {
                 .filter(employee -> gender.equals(employee.gender()))
                 .collect(Collectors.toList());
     }
+
+    @PutMapping("/{id}")
+    public Employee update(@PathVariable Integer id, @RequestBody Employee employee) {
+        Employee existingEmployee = employees.stream()
+                .filter(e -> e.id() == id)
+                .findFirst()
+                .orElse(null);
+        if (existingEmployee != null) {
+            employees.remove(existingEmployee);
+            Employee updatedEmployee = new Employee(
+                    id,
+                    employee.name() != null ? employee.name() : existingEmployee.name(),
+                    employee.age() != null ? employee.age() : existingEmployee.age(),
+                    employee.gender() != null ? employee.gender() : existingEmployee.gender(),
+                    employee.salary() != null ? employee.salary() : existingEmployee.salary()
+            );
+            employees.add(updatedEmployee);
+            return updatedEmployee;
+        }
+        return null;
+    }
 }
