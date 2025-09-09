@@ -128,4 +128,21 @@ public class EmployeeControllerTests {
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void should_return_page_employees_when_list_page() throws Exception {
+        employeeController.create(new Employee(null, "John Smith", 32, "Male", 5000.0));
+        employeeController.create(new Employee(null, "Lily", 22, "Female", 5000.0));
+        employeeController.create(new Employee(null, "Jack", 12, "Male", 5000.0));
+        employeeController.create(new Employee(null, "Victor", 42, "Male", 5000.0));
+        employeeController.create(new Employee(null, "Nick", 52, "Male", 5000.0));
+        employeeController.create(new Employee(null, "Frank", 62, "Male", 5000.0));
+
+        MockHttpServletRequestBuilder request = get("/employees?page=1&size=5")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5));
+    }
 }

@@ -37,11 +37,26 @@ public class EmployeeController {
 
     @GetMapping
     public List<Employee> index(
-            @RequestParam(required = false, value = "gender") String gender
-            ) {
-        return (gender == null || gender.isEmpty()) ? employees : employees.stream()
+            @RequestParam(required = false, value = "gender") String gender,
+            @RequestParam(required = false, value = "page") Integer page,
+            @RequestParam(required = false, value = "size") Integer size
+    ) {
+        List<Employee> filteredEmployees = (gender == null || gender.isEmpty())
+                ? employees
+                : employees.stream()
                 .filter(employee -> gender.equals(employee.gender()))
                 .collect(Collectors.toList());
+
+        if (page == null || size == null) {
+            return filteredEmployees;
+        }
+
+        int fromIndex = (page - 1) * size;
+        int toIndex = Math.min(fromIndex + size, filteredEmployees.size());
+        if (fromIndex >= filteredEmployees.size() || fromIndex < 0) {
+            return new ArrayList<>();
+        }
+        return filteredEmployees.subList(fromIndex, toIndex);
     }
 
     @PutMapping("/{id}")
