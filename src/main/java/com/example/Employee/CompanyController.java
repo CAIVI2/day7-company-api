@@ -71,4 +71,3 @@ public class CompanyController {
                 .collect(Collectors.toList());
     }
 }
-
