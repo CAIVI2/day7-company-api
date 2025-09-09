@@ -39,7 +39,7 @@ public class EmployeeController {
     public List<Employee> index(
             @RequestParam(required = false, value = "gender") String gender
             ) {
-        return employees.stream()
+        return (gender == null || gender.isEmpty()) ? employees : employees.stream()
                 .filter(employee -> gender.equals(employee.gender()))
                 .collect(Collectors.toList());
     }
