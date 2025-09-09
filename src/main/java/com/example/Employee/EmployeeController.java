@@ -64,4 +64,12 @@ public class EmployeeController {
         }
         return null;
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+        employees = employees.stream()
+                .filter(employee -> employee.id() != id)
+                .collect(Collectors.toList());
+    }
 }
