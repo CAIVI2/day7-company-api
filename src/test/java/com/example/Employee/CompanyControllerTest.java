@@ -1,5 +1,6 @@
 package com.example.Employee;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +18,14 @@ public class CompanyControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private CompanyController companyController;
+
+    @BeforeEach
+    public void setup() {
+        companyController.resetCompanies();
+    }
+
     @Test
     void should_return_created_company_when_post() throws Exception {
         String requestBody = """
@@ -33,5 +42,18 @@ public class CompanyControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value("spring"));
+    }
+
+    @Test
+    void should_return_companies_when_list_all() throws Exception {
+        companyController.create(new Company(null, "spring"));
+        companyController.create(new Company(null, "boot"));
+
+        MockHttpServletRequestBuilder request = get("/companies")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
     }
 }

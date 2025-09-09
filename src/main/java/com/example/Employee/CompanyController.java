@@ -11,6 +11,11 @@ public class CompanyController {
     private List<Company> companies = new ArrayList<>();
     private int id = 0;
 
+    public void resetCompanies() {
+        companies.clear();
+        id = 0;
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Company create(@RequestBody Company company) {
@@ -18,6 +23,11 @@ public class CompanyController {
         Company newCompany = new Company(id, company.name());
         companies.add(newCompany);
         return newCompany;
+    }
+
+    @GetMapping
+    public List<Company> index() {
+        return companies;
     }
 }
 
