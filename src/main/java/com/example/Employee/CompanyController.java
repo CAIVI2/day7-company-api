@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("companies")
@@ -60,6 +61,14 @@ public class CompanyController {
             return updated;
         }
         return null;
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+        companies = companies.stream()
+                .filter(company -> !company.id().equals(id))
+                .collect(Collectors.toList());
     }
 }
 
