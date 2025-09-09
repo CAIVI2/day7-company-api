@@ -46,5 +46,20 @@ public class CompanyController {
                 .findFirst()
                 .orElse(null);
     }
+
+    @PutMapping("/{id}")
+    public Company update(@PathVariable Integer id, @RequestBody Company company) {
+        Company existing = companies.stream()
+                .filter(c -> c.id().equals(id))
+                .findFirst()
+                .orElse(null);
+        if (existing != null) {
+            companies.remove(existing);
+            Company updated = new Company(id, company.name() != null ? company.name() : existing.name());
+            companies.add(updated);
+            return updated;
+        }
+        return null;
+    }
 }
 
