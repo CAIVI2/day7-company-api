@@ -20,4 +20,12 @@ public class EmployeeController {
         employees.add(newEmployee);
         return newEmployee;
     }
+
+    @GetMapping("/{id}")
+    public Employee get(@PathVariable Integer id) {
+        return employees.stream()
+                .filter(employee -> employee.id() == id)
+                .findFirst()
+                .orElse(null);
+    }
 }
