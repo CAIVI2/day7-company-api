@@ -29,5 +29,13 @@ public class CompanyController {
     public List<Company> index() {
         return companies;
     }
+
+    @GetMapping("/{id}")
+    public Company get(@PathVariable Integer id) {
+        return companies.stream()
+                .filter(company -> company.id().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 }
 
